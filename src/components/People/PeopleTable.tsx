@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Person } from '../../types';
 import classNames from 'classnames';
 
@@ -22,42 +22,39 @@ export const People: React.FC<Props> = ({ people }) => {
           data-cy="person"
         >
           <td>
-            <Link
-              className={classNames({ 'has-text-danger': person.sex === 'm' })}
-              to={`/people/${person.slug}`}
+            <a
+              className={classNames({ 'has-text-danger': person.sex === 'f' })}
+              href={`#/people/${person.slug}`}
             >
               {person.name}
-            </Link>
+            </a>
           </td>
           <td>{person.sex}</td>
           <td>{person.born}</td>
           <td>{person.died}</td>
           <td>
             {person.mother ? (
-              <Link
+              <a
                 className={classNames({
-                  'has-text-danger': person.sex === 'm',
+                  'has-text-danger': person.mother.sex === 'f',
                 })}
-                to={`/people/${person.mother.slug}`}
+                href={`#/people/${person.mother.slug}`}
               >
-                {/* Питання person.mother.name  */}
                 {person.mother.name}
-              </Link>
+              </a>
             ) : (
               <span
                 className={classNames({
-                  'has-text-danger': person.sex === 'm',
+                  'has-text-danger': person.motherName,
                 })}
               >
-                {person.motherName}
+                {person.motherName ? person.motherName : '-'}
               </span>
             )}
           </td>
           <td>
             {person.father ? (
-              <Link to={`/people/${person.father.slug}`}>
-                {person.fatherName}
-              </Link>
+              <a href={`#/people/${person.father.slug}`}>{person.fatherName}</a>
             ) : (
               person.fatherName || '-'
             )}

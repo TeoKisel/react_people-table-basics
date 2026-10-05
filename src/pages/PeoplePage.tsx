@@ -9,22 +9,29 @@ export const PeoplePage: React.FC = () => {
   const [peopleIsLoading, setPeopleIsLoading] = useState<boolean>(false);
   const [errorLoading, setErrorLoading] = useState<string>('');
 
-  const findMotherByName = (motherName: string) => {
-    people.find(person => person.name === motherName);
+  const findMotherByName = (motherName: string | null) => {
+    return people.find(person => person.name === motherName);
   };
 
-  const filtredPeople = people.map(person => ({
+  const findFatherByName = (FatherName: string | null) => {
+    return people.find(person => person.name === FatherName);
+  };
+
+  const filteredPeople = people.map(person => ({
     ...person,
     mother: findMotherByName(person.motherName),
+    father: findFatherByName(person.fatherName),
   }));
 
   useEffect(() => {
     setPeopleIsLoading(true);
     getPeople()
       .then(peopleList => {
-        setPeople(peopleList);
+        if (!(peopleList.length === 0)) {
+          setPeople(peopleList);
+        }
       })
-      .catch(() => setErrorLoading(''))
+      .catch(() => setErrorLoading('Something went wrong'))
       .finally(() => setPeopleIsLoading(false));
   }, []);
 
@@ -35,6 +42,12 @@ export const PeoplePage: React.FC = () => {
         <div className="box table-container">
           {peopleIsLoading ? (
             <Loader />
+          ) : errorLoading ? (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              Something went wrong
+            </p>
+          ) : people.length === 0 ? (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
           ) : (
             <table
               data-cy="peopleTable"
@@ -50,16 +63,9 @@ export const PeoplePage: React.FC = () => {
                   <th>Father</th>
                 </tr>
               </thead>
-
-              <People people={people} />
+              <People people={filteredPeople} />
             </table>
           )}
-
-          <p data-cy="peopleLoadingError" className="has-text-danger">
-            {errorLoading}
-          </p>
-
-          <p data-cy="noPeopleMessage">There are no people on the server</p>
         </div>
       </div>
     </>
