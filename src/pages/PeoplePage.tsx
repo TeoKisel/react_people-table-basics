@@ -27,9 +27,7 @@ export const PeoplePage: React.FC = () => {
     setPeopleIsLoading(true);
     getPeople()
       .then(peopleList => {
-        if (!(peopleList.length === 0)) {
-          setPeople(peopleList);
-        }
+        setPeople(peopleList);
       })
       .catch(() => setErrorLoading('Something went wrong'))
       .finally(() => setPeopleIsLoading(false));
